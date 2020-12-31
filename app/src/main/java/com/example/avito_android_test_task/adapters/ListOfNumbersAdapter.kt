@@ -12,6 +12,7 @@ class ListOfNumbersAdapter(
     private var mData: MutableList<ListOfNumbersModel>,
     private var listener: NumberItemListener
 ) : RecyclerView.Adapter<ListOfNumbersViewHolder>() {
+    var lastPos: Int? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ListOfNumbersViewHolder {
         return ListOfNumbersViewHolder(
@@ -24,7 +25,8 @@ class ListOfNumbersAdapter(
     override fun onBindViewHolder(holder: ListOfNumbersViewHolder, position: Int) {
         val model = mData[position]
         holder.mText.text = model.number
-        holder.mLayout.setOnClickListener {
+        holder.mButton.setOnClickListener {
+            lastPos = position
             listener.delete(position)
         }
     }

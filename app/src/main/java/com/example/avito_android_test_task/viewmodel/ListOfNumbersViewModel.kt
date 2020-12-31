@@ -30,9 +30,9 @@ class ListOfNumbersViewModel : ViewModel(), ListOfNumberInterface {
         }
     }
 
-    override fun deleteNumber() {
+    override fun deleteNumber(position: Int) {
         viewModelScope.launch {
-            list.addNumber()
+            list.deleteNumber(position)
         }
     }
 }

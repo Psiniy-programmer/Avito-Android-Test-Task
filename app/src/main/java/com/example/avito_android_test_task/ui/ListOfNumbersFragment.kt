@@ -1,12 +1,14 @@
 package com.example.avito_android_test_task.ui
 
+import android.content.res.Configuration
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.avito_android_test_task.Interfaces.NumberItemListener
 import com.example.avito_android_test_task.R
@@ -30,7 +32,8 @@ class ListOfNumbersFragment : Fragment(), NumberItemListener {
         super.onViewCreated(view, savedInstanceState)
         mViewModel = ViewModelProvider(this)[ListOfNumbersViewModel::class.java]
         mRecyclerView = view.findViewById(R.id.fragment_recycler)
-        mRecyclerView.layoutManager = LinearLayoutManager(context)
+        mRecyclerView.layoutManager =
+            GridLayoutManager(context, getSpanCount(), RecyclerView.VERTICAL, false)
 
         val listener = this as NumberItemListener
 
@@ -43,23 +46,34 @@ class ListOfNumbersFragment : Fragment(), NumberItemListener {
         mViewModel.list.observe(
             viewLifecycleOwner,
             {
+                Log.d("ListOfNumbersLiveData", "refresh")
                 if (mRecyclerView.adapter == null) {
                     adapter.refresh(it)
                     adapter.notifyDataSetChanged()
                     mRecyclerView.adapter = adapter
                 } else {
                     adapter.refresh(it)
-                    adapter.notifyDataSetChanged()
+                    adapter.notifyItemRemoved(posForDeleting)
+                    adapter.notifyItemRangeChanged(0, adapter.itemCount)
                 }
             }
         )
     }
 
+    private fun getSpanCount(): Int {
+        return if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT)
+            PortraitSpanCount else LandscapeSpanCount
+    }
+
     companion object {
         const val TAG = "ListOfNumbers"
+        const val PortraitSpanCount = 2
+        const val LandscapeSpanCount = 4
+        var posForDeleting = 0
     }
 
     override fun delete(position: Int) {
-        mViewModel.deleteNumber()
+        mViewModel.deleteNumber(position)
+        posForDeleting = position
     }
 }
