@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name" translatable="false">avito-android-test-task</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="button_image">button image</string>
+</resources>
