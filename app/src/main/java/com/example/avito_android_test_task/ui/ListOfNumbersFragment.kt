@@ -9,14 +9,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.avito_android_test_task.Interfaces.NumberItemListener
 import com.example.avito_android_test_task.R
 import com.example.avito_android_test_task.adapters.ListOfNumbersAdapter
-import com.example.avito_android_test_task.data.model.ListOfNumbersModel
 import com.example.avito_android_test_task.viewmodel.ListOfNumbersViewModel
-import kotlin.math.log
 
 class ListOfNumbersFragment : Fragment(), NumberItemListener {
 
@@ -37,7 +34,6 @@ class ListOfNumbersFragment : Fragment(), NumberItemListener {
         mRecyclerView = view.findViewById(R.id.fragment_recycler)
         mRecyclerView.layoutManager =
             GridLayoutManager(context, getSpanCount(), RecyclerView.VERTICAL, false)
-//        mRecyclerView.layoutManager = LinearLayoutManager(context)
 
         val listener = this as NumberItemListener
 
@@ -57,6 +53,10 @@ class ListOfNumbersFragment : Fragment(), NumberItemListener {
                     adapter.notifyItemRangeChanged(posForDeleting!!, it.size)
                     posForDeleting = null
                 } else {
+//                    adapter.newItemPos?.let { it1 ->
+//                        adapter.notifyItemInserted(it1)
+//                        adapter.notifyItemRangeChanged(it1, it.size)
+//                    }
                     mViewModel.newPos?.let { newPos ->
                         adapter.notifyItemInserted(newPos)
                         adapter.notifyItemRangeChanged(newPos, it.size)
