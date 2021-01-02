@@ -1,7 +1,9 @@
 package com.example.avito_android_test_task.adapters
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import androidx.recyclerview.widget.RecyclerView
 import com.example.avito_android_test_task.R
 import com.example.avito_android_test_task.adapters.viewholders.ListOfNumbersViewHolder
@@ -12,7 +14,6 @@ class ListOfNumbersAdapter(
     private var mData: MutableList<ListOfNumbersModel>,
     private var listener: NumberItemListener
 ) : RecyclerView.Adapter<ListOfNumbersViewHolder>() {
-    var lastPos: Int? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ListOfNumbersViewHolder {
         return ListOfNumbersViewHolder(
@@ -24,9 +25,11 @@ class ListOfNumbersAdapter(
 
     override fun onBindViewHolder(holder: ListOfNumbersViewHolder, position: Int) {
         val model = mData[position]
+        holder.mLayout.animation =
+            AnimationUtils.loadAnimation(holder.itemView.context, R.anim.item_animation)
         holder.mText.text = model.number
         holder.mButton.setOnClickListener {
-            lastPos = position
+            holder.mButton.isClickable = false
             listener.delete(position)
         }
     }

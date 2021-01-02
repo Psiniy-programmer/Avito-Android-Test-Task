@@ -9,11 +9,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.avito_android_test_task.Interfaces.NumberItemListener
 import com.example.avito_android_test_task.R
 import com.example.avito_android_test_task.adapters.ListOfNumbersAdapter
+import com.example.avito_android_test_task.data.model.ListOfNumbersModel
 import com.example.avito_android_test_task.viewmodel.ListOfNumbersViewModel
+import kotlin.math.log
 
 class ListOfNumbersFragment : Fragment(), NumberItemListener {
 
@@ -34,6 +37,7 @@ class ListOfNumbersFragment : Fragment(), NumberItemListener {
         mRecyclerView = view.findViewById(R.id.fragment_recycler)
         mRecyclerView.layoutManager =
             GridLayoutManager(context, getSpanCount(), RecyclerView.VERTICAL, false)
+//        mRecyclerView.layoutManager = LinearLayoutManager(context)
 
         val listener = this as NumberItemListener
 
@@ -42,19 +46,21 @@ class ListOfNumbersFragment : Fragment(), NumberItemListener {
         } else {
             ListOfNumbersAdapter(mutableListOf(), listener)
         }
-
+        mRecyclerView.adapter = adapter
         mViewModel.list.observe(
             viewLifecycleOwner,
             {
-                Log.d("ListOfNumbersLiveData", "refresh")
-                if (mRecyclerView.adapter == null) {
-                    adapter.refresh(it)
-                    adapter.notifyDataSetChanged()
-                    mRecyclerView.adapter = adapter
+                Log.d("ListOfNumbersLiveData", "size ${it.size}")
+                adapter.refresh(it)
+                if (posForDeleting != null) {
+                    adapter.notifyItemRemoved(posForDeleting!!)
+                    adapter.notifyItemRangeChanged(posForDeleting!!, it.size)
+                    posForDeleting = null
                 } else {
-                    adapter.refresh(it)
-                    adapter.notifyItemRemoved(posForDeleting)
-                    adapter.notifyItemRangeChanged(0, adapter.itemCount)
+                    mViewModel.newPos?.let { newPos ->
+                        adapter.notifyItemInserted(newPos)
+                        adapter.notifyItemRangeChanged(newPos, it.size)
+                    }
                 }
             }
         )
@@ -69,11 +75,12 @@ class ListOfNumbersFragment : Fragment(), NumberItemListener {
         const val TAG = "ListOfNumbers"
         const val PortraitSpanCount = 2
         const val LandscapeSpanCount = 4
-        var posForDeleting = 0
+        var posForDeleting: Int? = null
     }
 
     override fun delete(position: Int) {
-        mViewModel.deleteNumber(position)
+        Log.d("ListOfNumbersLiveData", "pos = $position")
         posForDeleting = position
+        mViewModel.deleteNumber(position)
     }
 }

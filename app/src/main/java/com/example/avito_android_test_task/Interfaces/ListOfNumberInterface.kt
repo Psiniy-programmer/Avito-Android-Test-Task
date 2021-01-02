@@ -1,6 +1,6 @@
 package com.example.avito_android_test_task.Interfaces
 
 interface ListOfNumberInterface {
-    fun addNumber()
+    fun addNumber(): Int?
     fun deleteNumber(position: Int)
 }

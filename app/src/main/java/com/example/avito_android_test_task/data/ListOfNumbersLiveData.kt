@@ -7,32 +7,34 @@ import com.example.avito_android_test_task.data.model.ListOfNumbersModel
 
 class ListOfNumbersLiveData : MutableLiveData<MutableList<ListOfNumbersModel>>(),
     ListOfNumberInterface {
+    private val pool: MutableList<ListOfNumbersModel> = mutableListOf()
 
     init {
         value = mutableListOf()
-        value?.add(ListOfNumbersModel("1"))
-        value?.add(ListOfNumbersModel("2"))
-        value?.add(ListOfNumbersModel("3"))
-        value?.add(ListOfNumbersModel("4"))
-        value?.add(ListOfNumbersModel("5"))
-        value?.add(ListOfNumbersModel("6"))
-        value?.add(ListOfNumbersModel("7"))
-        Log.d(TAG, value.toString())
+        for (i in 0..15) {
+            value?.add(ListOfNumbersModel(i.toString()))
+        }
     }
 
-    override fun addNumber() {
-        value?.add(ListOfNumbersModel("2"))
+    override fun addNumber(): Int? {
+        if (value != null) {
+            val newList: MutableList<ListOfNumbersModel>? = value
+            val newPos = (0..newList?.size!!).random()
+            val newVal = if (pool.isEmpty())
+                ListOfNumbersModel(newList.size.toString()) else pool.removeLast()
+            Log.d(TAG, "$newVal")
+            newList.add(newPos, newVal)
+            value = newList
+            return newPos
+        }
+        return null
     }
 
     override fun deleteNumber(position: Int) {
-        Log.d(TAG, "inncome pos = ${position.toString()}")
-        value?.get(position)?.let { Log.d(TAG, "val on income pos = ${it.toString()}") }
-        Log.d(TAG, "BEFORE LIST = $value")
         val newList: MutableList<ListOfNumbersModel>? = value
+        newList?.get(position)?.let { pool.add(it) }
         newList?.removeAt(position)
-        Log.d(TAG, "AFTER LIST = $value")
         value = newList
-        Log.d(TAG, value?.size.toString())
     }
 
     companion object {

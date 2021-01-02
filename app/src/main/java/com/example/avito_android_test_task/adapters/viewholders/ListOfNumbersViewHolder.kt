@@ -12,4 +12,6 @@ class ListOfNumbersViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         private set
     var mButton: ImageButton = view.findViewById(R.id.number_delete_button)
         private set
+    var mLayout : RelativeLayout = view.findViewById(R.id.number_layout)
+        private set
 }
