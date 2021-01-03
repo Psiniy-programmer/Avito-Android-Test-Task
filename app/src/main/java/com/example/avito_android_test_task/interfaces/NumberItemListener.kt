@@ -1,4 +1,4 @@
-package com.example.avito_android_test_task.Interfaces
+package com.example.avito_android_test_task.interfaces
 
 interface NumberItemListener {
     fun delete(position: Int)

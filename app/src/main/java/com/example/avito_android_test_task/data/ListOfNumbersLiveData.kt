@@ -2,7 +2,7 @@ package com.example.avito_android_test_task.data
 
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
-import com.example.avito_android_test_task.Interfaces.ListOfNumberInterface
+import com.example.avito_android_test_task.interfaces.ListOfNumberInterface
 import com.example.avito_android_test_task.data.model.ListOfNumbersModel
 
 class ListOfNumbersLiveData : MutableLiveData<MutableList<ListOfNumbersModel>>(),
@@ -10,13 +10,30 @@ class ListOfNumbersLiveData : MutableLiveData<MutableList<ListOfNumbersModel>>()
     private val pool: MutableList<ListOfNumbersModel> = mutableListOf()
 
     init {
-        value = mutableListOf()
-        for (i in 0..15) {
-            value?.add(ListOfNumbersModel(i.toString()))
+        value = Numbers.instance.numbers
+    }
+
+    class Numbers {
+        val numbers: MutableList<ListOfNumbersModel> by lazy { mutableListOf() }
+
+        object NumbersHolder {
+            val instance = Numbers()
+        }
+
+        init {
+            for (i in 0..NumbersCount)
+                numbers.add(ListOfNumbersModel(i.toString()))
+        }
+
+        companion object {
+            private const val NumbersCount = 15
+            val instance: Numbers
+                get() = NumbersHolder.instance
         }
     }
 
     override fun addNumber(): Int? {
+
         if (value != null) {
             val newList: MutableList<ListOfNumbersModel>? = value
             val newPos = (0..newList?.size!!).random()
