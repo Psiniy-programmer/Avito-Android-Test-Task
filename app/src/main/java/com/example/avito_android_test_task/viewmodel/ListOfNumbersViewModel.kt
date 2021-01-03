@@ -30,7 +30,7 @@ class ListOfNumbersViewModel : ViewModel() {
         viewModelScope.launch {
            while(true) {
                newPos = list.addNumber()
-               delay(1000)
+               delay(5000)
            }
         }
     }
